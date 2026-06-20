@@ -16,6 +16,7 @@ powershell "Remove-Item -Path \"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersi
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Edge\SmartScreenEnabled" /ve /t REG_DWORD /d 0 /f
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\AppHost" /v "EnableWebContentEvaluation" /t REG_DWORD /d 0 /f
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "SmartScreenEnabled" /t REG_SZ /d Off /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WTDS\Components" /v "ServiceEnabled" /t REG_DWORD /d 0 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\BitLocker" /v "PreventDeviceEncryption" /t REG_DWORD /d 1 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Config" /v "VulnerableDriverBlocklistEnable" /t REG_DWORD /d 0 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy" /v "VerifiedAndReputablePolicyState" /t REG_DWORD /d 0 /f
@@ -34,7 +35,7 @@ schtasks /change /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verif
 REM Applying changes to BCD
 REM Setting the bootmenupolicy to Legacy can help troubleshoot boot issues since the bootloader will not load windows before showing the boot menu
 bcdedit /set bootmenupolicy Legacy
-REM Setting nocrashautoreboot can help troubleshoot BSODs by preventing automatic reboots to properly check error codes
+REM Setting nocrashautoreboot can help troubleshoot BSODs by preventing automatic reboots to properly check stop codes
 bcdedit /set nocrashautoreboot Yes
 bcdedit /set nx OptOut
 bcdedit /set recoveryenabled No
@@ -79,7 +80,7 @@ REM Reducing keyboard and mouse ring buffer
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d 16 /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d 16 /f
 
-REM Compressing OS files
+REM Compressing OS binaries
 compact /compactos:always
 
 echo.
